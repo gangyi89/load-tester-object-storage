@@ -1,0 +1,23 @@
+# Log files
+*.log
+
+# Binary files
+upload_file
+upload_file.exe
+
+# Test files directory
+load_test_files/
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
