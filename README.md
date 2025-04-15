@@ -1,5 +1,6 @@
 # Upload Files to S3 Object Storage with Rate limit Parameters
 
+Generate 5000 1MB files of mp4 format and upload to Object Storage with rate limit parameters - ex 200 concurrent uploads.
 ## Getting Started
 
 1. Clone the repository
@@ -17,7 +18,7 @@ git clone https://github.com/yourusername/upload-files-to-s3.git
 3. Run go upload script
 
 ```bash
-go run upload_file.go -rate 100 -dir load_test_files -bucket <BUCKET_NAME> -endpoint <OBJECT_STORE_ENDPOINT> -access-key <OBJECT_STORE_ACCESS_KEY> -secret-key <OBJECT_STORE_SECRET_KEY>
+go run upload_file.go -rate 200 -dir load_test_files -bucket <BUCKET_NAME> -endpoint <OBJECT_STORE_ENDPOINT> -access-key <OBJECT_STORE_ACCESS_KEY> -secret-key <OBJECT_STORE_SECRET_KEY>
 ```
 
 ## Parameters
