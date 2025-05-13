@@ -17,6 +17,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 func main() {
@@ -113,15 +114,20 @@ func uploadFile(client *s3.S3, filePath, bucket, folderPath string) error {
 	}
 	defer file.Close()
 
+	// Create an uploader with the same session configuration as the client
+	uploader := s3manager.NewUploaderWithClient(client)
+
 	// Modify objectKey to include the new folder path
 	objectKey := fmt.Sprintf("%s/%s", folderPath, filepath.Base(filePath))
 
 	// Upload the file
-	_, err = client.PutObject(&s3.PutObjectInput{
+	uploadInput := &s3manager.UploadInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(objectKey),
 		Body:   file,
-	})
+	}
+
+	_, err = uploader.Upload(uploadInput)
 	if err != nil {
 		log.Printf("Failed to upload file %s: %v", filePath, err)
 		return err
