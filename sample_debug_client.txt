@@ -1,0 +1,44 @@
+AWS: 2025/05/20 10:11:05 DEBUG: Request Signature:
+---[ CANONICAL STRING  ]-----------------------------
+PUT
+/load-gy/2025-05-20_10-11-05/file_1018.mp4
+
+content-length:1048576
+content-md5:TFLUv5dqI3qoOTwYqwdmag==
+host:sg-sin-1.linodeobjects.com
+x-amz-content-sha256:b2ea2299399ba57c450a536308ec1d91cdd5a30fe55c73fd9e1f0ab6574c2cf2
+x-amz-date:20250520T101105Z
+
+content-length;content-md5;host;x-amz-content-sha256;x-amz-date
+b2ea2299399ba57c450a536308ec1d91cdd5a30fe55c73fd9e1f0ab6574c2cf2
+---[ STRING TO SIGN ]--------------------------------
+AWS4-HMAC-SHA256
+20250520T101105Z
+20250520/us-east-1/s3/aws4_request
+926c514ecadf71da4823e1d67a3f8256770017184d0f8d3e74cd2f36a22bea67
+-----------------------------------------------------
+AWS: 2025/05/20 10:11:06 DEBUG: Request s3/PutObject Details:
+---[ REQUEST POST-SIGN ]-----------------------------
+PUT /load-gy/2025-05-20_10-11-05/file_1018.mp4 HTTP/1.1
+Host: sg-sin-1.linodeobjects.com
+User-Agent: aws-sdk-go/1.50.35 (go1.24.2; linux; amd64) S3Manager
+Content-Length: 1048576
+Authorization: AWS4-HMAC-SHA256 Credential=7J88F6ADOAEAJ9X4M4Q5/20250520/us-east-1/s3/aws4_request, SignedHeaders=content-length;content-md5;host;x-amz-content-sha256;x-amz-date, Signature=9e60dad916be80d097382893f3f345ac668270a07b5cf99038f8d7beac630bec
+Content-Md5: TFLUv5dqI3qoOTwYqwdmag==
+X-Amz-Content-Sha256: b2ea2299399ba57c450a536308ec1d91cdd5a30fe55c73fd9e1f0ab6574c2cf2
+X-Amz-Date: 20250520T101105Z
+Accept-Encoding: gzip
+-----------------------------------------------------
+AWS: 2025/05/20 10:11:07 DEBUG: Response s3/PutObject Details:
+---[ RESPONSE ]--------------------------------------
+HTTP/1.1 200 OK
+Content-Length: 0
+Accept-Ranges: bytes
+Date: Tue, 20 May 2025 10:11:07 GMT
+Etag: "4c52d4bf976a237aa8393c18ab07666a"
+Server: envoy
+X-Amz-Request-Id: tx000001547005e7bb6ce4a-00682c553a-8288aa-default
+X-Envoy-Upstream-Service-Time: 14
+X-Ratelimit-Limit: 500, 500;w=1
+X-Ratelimit-Remaining: 451
+X-Ratelimit-Reset: 1
