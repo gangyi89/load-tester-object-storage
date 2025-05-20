@@ -14,11 +14,21 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
+
+// Custom AWS logger that writes to our log file
+type customLogger struct {
+	logger *log.Logger
+}
+
+func (l *customLogger) Log(args ...interface{}) {
+	l.logger.Println(args...)
+}
 
 func main() {
 	// Create log file with timestamp
@@ -31,6 +41,11 @@ func main() {
 
 	// Set log output to file
 	log.SetOutput(logFile)
+
+	// Create custom AWS logger
+	awsLogger := &customLogger{
+		logger: log.New(logFile, "AWS: ", log.LstdFlags),
+	}
 
 	// Generate folder name once at start
 	folderPath := time.Now().Format("2006-01-02_15-04-05")
@@ -56,6 +71,8 @@ func main() {
 		Region:           aws.String("us-east-1"),
 		Credentials:      credentials.NewStaticCredentials(*accessKey, *secretKey, ""),
 		S3ForcePathStyle: aws.Bool(true),
+		Logger:           awsLogger,
+		LogLevel:         aws.LogLevel(aws.LogDebugWithSigning),
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -114,6 +131,9 @@ func uploadFile(client *s3.S3, filePath, bucket, folderPath string) error {
 	}
 	defer file.Close()
 
+	// Enable debug logging for the S3 client
+	client.Config.LogLevel = aws.LogLevel(aws.LogDebugWithSigning)
+
 	// Create an uploader with the same session configuration as the client
 	uploader := s3manager.NewUploaderWithClient(client)
 
@@ -129,6 +149,13 @@ func uploadFile(client *s3.S3, filePath, bucket, folderPath string) error {
 
 	_, err = uploader.Upload(uploadInput)
 	if err != nil {
+		// Check if it's a 403 error
+		if aerr, ok := err.(awserr.Error); ok && aerr.Code() == "AccessDenied" {
+			log.Printf("403 Access Denied error for file %s. Request details:", filePath)
+			log.Printf("Bucket: %s", bucket)
+			log.Printf("Object Key: %s", objectKey)
+			log.Printf("Error Message: %v", err)
+		}
 		log.Printf("Failed to upload file %s: %v", filePath, err)
 		return err
 	}
